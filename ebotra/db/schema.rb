@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151227154225) do
+ActiveRecord::Schema.define(:version => 20151227171214) do
 
   create_table "cities", :force => true do |t|
     t.integer "country_id"
@@ -21,6 +21,12 @@ ActiveRecord::Schema.define(:version => 20151227154225) do
   create_table "countries", :force => true do |t|
     t.string "name"
     t.string "continent"
+  end
+
+  create_table "hotels", :force => true do |t|
+    t.string "name"
+    t.text   "details"
+    t.float  "ratings"
   end
 
   create_table "tours", :force => true do |t|
@@ -34,6 +40,22 @@ ActiveRecord::Schema.define(:version => 20151227154225) do
   create_table "tours_cities", :force => true do |t|
     t.string "tour_id"
     t.float  "city_id"
+  end
+
+  create_table "tours_hotels", :force => true do |t|
+    t.integer "tour_id"
+    t.integer "hotel_id"
+  end
+
+  create_table "tours_operators", :force => true do |t|
+    t.string "name"
+    t.text   "details"
+    t.string "contact"
+  end
+
+  create_table "tours_operators_map", :force => true do |t|
+    t.integer "tour_id"
+    t.integer "tour_operator_id"
   end
 
 end
