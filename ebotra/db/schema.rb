@@ -29,6 +29,12 @@ ActiveRecord::Schema.define(:version => 20151227171214) do
     t.float  "ratings"
   end
 
+  create_table "tour_operators", :force => true do |t|
+    t.string "name"
+    t.text   "details"
+    t.string "contact"
+  end
+
   create_table "tours", :force => true do |t|
     t.string "name"
     t.float  "duration_in_days"

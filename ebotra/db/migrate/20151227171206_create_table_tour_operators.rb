@@ -1,6 +1,6 @@
 class CreateTableTourOperators < ActiveRecord::Migration
   def up
-    create_table :tours_operators do |t|
+    create_table :tour_operators do |t|
       t.string :name
       t.text :details
       t.string :contact
