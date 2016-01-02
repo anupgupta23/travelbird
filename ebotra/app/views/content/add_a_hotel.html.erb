@@ -1,0 +1,9 @@
+<%= render 'header'%>
+
+<%= form_tag(url_for(:action => :save_hotel, :controller => :content)) do |f| %>
+    Hotel Name: <%= text_field_tag :name %><br>
+    Ratings: <%= text_field_tag :ratings %><br>
+    Details: <%= text_area_tag :details %><br>
+    <%= submit_tag 'Submit' %>
+<% end %>
+

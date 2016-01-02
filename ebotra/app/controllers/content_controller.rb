@@ -22,4 +22,15 @@ class ContentController < ApplicationController
     redirect_to :back
   end
 
+  def save_hotel
+    hotel = Hotel.new(:name=>params[:name], :ratings=>params[:ratings], :details=>params[:details])
+    if hotel.save
+      flash[:notice]="Successfully saved!"
+    else
+      flash[:error]="Could not save! Reason : " + hotel.errors.full_messages.join(' | ')
+    end
+    redirect_to :back
+  end
+
+
 end

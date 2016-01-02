@@ -14,6 +14,8 @@ Ebotra::Application.routes.draw do
   #   resources :products
   get 'content/add_a_city'
   get 'content/add_a_country'
+  get 'content/add_a_hotel'
+  get 'content/add_a_tour'
   match ':controller/:action'
   resources :content
   # Sample resource route with options:
