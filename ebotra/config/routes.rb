@@ -12,7 +12,10 @@ Ebotra::Application.routes.draw do
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
-
+  get 'content/add_a_city'
+  get 'content/add_a_country'
+  match ':controller/:action'
+  resources :content
   # Sample resource route with options:
   #   resources :products do
   #     member do

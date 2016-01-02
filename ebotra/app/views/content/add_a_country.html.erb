@@ -1,0 +1,9 @@
+<%= render 'header'%>
+
+<%= form_tag(url_for(:action => :save_country, :controller => :content)) do |f| %>
+    Country Name: <%= text_field_tag :name %><br>
+    Continent Name: <%= select_tag :continent, options_for_select(Country.continent_list) %><br>
+    <%= submit_tag 'Submit' %>
+
+<% end %>
+
