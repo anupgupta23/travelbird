@@ -1,7 +1,6 @@
 class City < ActiveRecord::Base
-  serialize :places_and_attractions, Array
-  attr_accessible :name, :places_and_attractions, :country_id
+  attr_accessible :name, :best_time_of_visit, :country_id,:weather, :other_info
   has_and_belongs_to_many :tours, :join_table=>'tours_cities'
   belongs_to :country
-  validates_presence_of :name, :places_and_attractions, :country_id
+  validates_presence_of :name, :country_id , :best_time_of_visit, :weather
 end

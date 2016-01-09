@@ -1,5 +1,5 @@
 class ContentController < ApplicationController
-
+  require 'csv'
   def save_country
     country = Country.new(:continent=>params[:continent], :name=>params[:name])
     if country.save
@@ -11,9 +11,7 @@ class ContentController < ApplicationController
   end
 
   def save_city
-    city = City.new(:name=>params[:name], :country_id=>params[:country_id])
-    p_a=params[:places_and_attractions]
-    city.places_and_attractions=p_a.split('|') if p_a.present?
+    city = City.new(:name=>params[:name], :country_id=>params[:country_id], :best_time_of_visit=>params[:best_time_of_visit], :weather=>params[:weather], :other_info=>params[:other_info])
     if city.save
       flash[:notice]="Successfully saved!"
     else
@@ -22,15 +20,28 @@ class ContentController < ApplicationController
     redirect_to :back
   end
 
-  def save_hotel
-    hotel = Hotel.new(:name=>params[:name], :ratings=>params[:ratings], :details=>params[:details])
-    if hotel.save
-      flash[:notice]="Successfully saved!"
+
+  def delete_city_or_country
+    object=params[:type].constantize.find_by_id(params[:id])
+    if object.blank?
+     flash[:error]="ID not found for type #{params[:type]}"
     else
-      flash[:error]="Could not save! Reason : " + hotel.errors.full_messages.join(' | ')
+     object.delete
+     flash[:notice]="Saved deleted!"
     end
     redirect_to :back
   end
 
+  def download_locations
+    city_data=City.all(:include=>:country)
+    csv_file=CSV.generate do |csv|
+      csv << ["CityID", "CityName", "Weather", "Best Time To Visit", "Other Info", "Country Name", "CountryId", "Continent"]
+      city_data.each do |item|
+        csv << [item.id, item.name, item.weather, item.best_time_of_visit, item.other_info, item.country.name, item.country.id, item.country.continent]
+      end
+    end
+    filename="LocationsDumpAt"+ Time.now.to_s
+    send_data csv_file, :type => 'text/csv; charset=iso-8859-1; header=present', :disposition => "attachment;filename=#{filename}.csv"
+  end
 
 end

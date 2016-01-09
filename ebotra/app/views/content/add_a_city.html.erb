@@ -3,7 +3,9 @@
 <%= form_tag(url_for(:action => :save_city, :controller => :content)) do |f| %>
     City Name: <%= text_field_tag :name %><br>
     Country Name: <%= select_tag :country_id, options_for_select(Country.get_all_countries_map) %><br>
-    Places and attractions(seperate by |): <%= text_area_tag :places_and_attractions %><br>
+    Weather: <%= text_area_tag :weather %><br>
+    Best time to visit : <%= text_area_tag :best_time_of_visit %><br>
+    Other Info: <%= text_area_tag :other_info %><br>
     <%= submit_tag 'Submit' %>
 
 <% end %>
