@@ -11,11 +11,26 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151227171214) do
+ActiveRecord::Schema.define(:version => 20160109155424) do
+
+  create_table "attractions", :force => true do |t|
+    t.string  "name"
+    t.integer "city_id"
+    t.float   "price"
+    t.string  "start_time"
+    t.string  "end_time"
+    t.string  "closed_on"
+    t.text    "other_details"
+    t.float   "rating"
+    t.text    "must_do"
+  end
 
   create_table "cities", :force => true do |t|
     t.integer "country_id"
-    t.text    "places_and_attractions"
+    t.string  "name"
+    t.string  "weather"
+    t.text    "best_time_of_visit"
+    t.text    "other_info"
   end
 
   create_table "countries", :force => true do |t|
@@ -62,6 +77,18 @@ ActiveRecord::Schema.define(:version => 20151227171214) do
   create_table "tours_operators_map", :force => true do |t|
     t.integer "tour_id"
     t.integer "tour_operator_id"
+  end
+
+  create_table "travel_styles", :force => true do |t|
+    t.integer "tour_id"
+    t.boolean "style1"
+    t.boolean "style2"
+    t.boolean "style3"
+    t.boolean "style4"
+    t.boolean "style5"
+    t.boolean "style6"
+    t.boolean "style7"
+    t.boolean "style8"
   end
 
 end

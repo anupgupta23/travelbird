@@ -24,10 +24,10 @@ class ContentController < ApplicationController
   def delete_city_or_country
     object=params[:type].constantize.find_by_id(params[:id])
     if object.blank?
-     flash[:error]="ID not found for type #{params[:type]}"
+      flash[:error]="ID not found for type #{params[:type]}"
     else
-     object.delete
-     flash[:notice]="Saved deleted!"
+      object.delete
+      flash[:notice]="Saved deleted!"
     end
     redirect_to :back
   end
@@ -42,6 +42,38 @@ class ContentController < ApplicationController
     end
     filename="LocationsDumpAt"+ Time.now.to_s
     send_data csv_file, :type => 'text/csv; charset=iso-8859-1; header=present', :disposition => "attachment;filename=#{filename}.csv"
+  end
+
+  def upload_attractions_csv
+    if params[:data_file].blank?
+      flash[:error]="Please upload file."
+      redirect_to :back
+      return
+    end
+    upload_file = File.open(params[:data_file].path, 'r')
+    csv_data=CSV.parse(upload_file, :headers => true)
+    Rails.logger.debug csv_data.headers
+    if (Attraction.headers-csv_data.headers).present?
+      flash[:error]="Headers are incorrect. Please see instructions below."
+      redirect_to :back
+      return
+    end
+    begin
+      csv_data.each do |row|
+        city=City.find_by_name(row['city_name'])
+        raise Exception, "City Name #{row['city_name']} is incorrect." if city.blank?
+        attraction = Attraction.new(:city_id=>city.id, :name=> row['name'], :price => row['price'], :start_time=>row['start_time'], :end_time=>row['end_time'],:closed_on=>row['closed_on'], :other_details=>row['other_details'], :rating=>row['rating'], :must_do=>row['must_do'])
+        unless attraction.save
+          raise Exception, attraction.errors.full_messages.join(',')
+        end
+      end
+      flash[:notice]="Successfully Uploaded!"
+      redirect_to :back
+    rescue Exception=>e
+      flash[:error]="Could not upload! Reason: "+e.message
+      redirect_to :back
+      raise ActiveRecord::Rollback
+    end
   end
 
 end
