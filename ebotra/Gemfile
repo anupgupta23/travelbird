@@ -6,6 +6,7 @@ gem 'rails', '3.2.22'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 gem 'mysql2',"~> 0.3.10"
 gem 'dalli',"~> 2.7.2"
+gem 'test-unit', '~> 3.0'
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
