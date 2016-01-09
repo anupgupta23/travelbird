@@ -11,7 +11,7 @@ class ContentController < ApplicationController
   end
 
   def save_city
-    city = City.new(:name=>params[:name], :country_id=>params[:country_id], :best_time_of_visit=>params[:best_time_of_visit], :weather=>params[:weather], :other_info=>params[:other_info])
+    city = City.new(:name=>params[:name], :country_id=>params[:country_id], :best_time_of_visit=>params[:best_time_of_visit], :weather=>params[:weather], :other_info=>params[:other_info], :for_months=>params[:months])
     if city.save
       flash[:notice]="Successfully saved!"
     else

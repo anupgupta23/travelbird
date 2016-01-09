@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160109155424) do
+ActiveRecord::Schema.define(:version => 20160109181301) do
 
   create_table "attractions", :force => true do |t|
     t.string  "name"
@@ -31,6 +31,11 @@ ActiveRecord::Schema.define(:version => 20160109155424) do
     t.string  "weather"
     t.text    "best_time_of_visit"
     t.text    "other_info"
+  end
+
+  create_table "city_months", :force => true do |t|
+    t.string  "month"
+    t.integer "city_id"
   end
 
   create_table "countries", :force => true do |t|
