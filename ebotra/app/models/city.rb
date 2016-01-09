@@ -4,7 +4,7 @@ class City < ActiveRecord::Base
   belongs_to :country
   has_many :city_months
   accepts_nested_attributes_for :city_months
-  validates_presence_of :name, :country_id , :weather
+  validates_presence_of :name, :country_id
 
   def for_months= months
     return if months.blank?
