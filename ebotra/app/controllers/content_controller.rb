@@ -21,7 +21,7 @@ class ContentController < ApplicationController
   end
 
 
-  def delete_somethin
+  def delete_something
     object=params[:type].constantize.find_by_id(params[:id])
     if object.blank?
       flash[:error]="ID not found for type #{params[:type]}"
