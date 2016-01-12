@@ -21,23 +21,23 @@ class ContentController < ApplicationController
   end
 
 
-  def delete_city_or_country
+  def delete_somethin
     object=params[:type].constantize.find_by_id(params[:id])
     if object.blank?
       flash[:error]="ID not found for type #{params[:type]}"
     else
       object.delete
-      flash[:notice]="Saved deleted!"
+      flash[:notice]="Deleted!"
     end
     redirect_to :back
   end
 
   def download_locations
-    city_data=City.all(:include=>:country)
+    city_data=City.all(:include=>[:country,:city_months])
     csv_file=CSV.generate do |csv|
       csv << ["CityID", "CityName", "Weather", "Best Time To Visit", "Other Info", "Country Name", "CountryId", "Continent"]
       city_data.each do |item|
-        csv << [item.id, item.name, item.weather, item.best_time_of_visit, item.other_info, item.country.name, item.country.id, item.country.continent]
+        csv << [item.id, item.name, item.weather, item.city_months.map(&:month).join(' | '), item.other_info, item.country.name, item.country.id, item.country.continent]
       end
     end
     filename="LocationsDumpAt"+ Time.now.to_s
@@ -74,6 +74,52 @@ class ContentController < ApplicationController
       redirect_to :back
       raise ActiveRecord::Rollback
     end
+  end
+
+  def upload_attraction_themes_csv
+    if params[:data_file].blank?
+      flash[:error]="Please upload file."
+      redirect_to :back
+      return
+    end
+    upload_file = File.open(params[:data_file].path, 'r')
+    csv_data=CSV.parse(upload_file, :headers => true)
+    if (AttractionGeneral.headers-csv_data.headers).present?
+      flash[:error]="Headers are incorrect. Please see instructions below."
+      redirect_to :back
+      return
+    end
+    begin
+      csv_data.each do |row|
+        attraction=Attraction.find_by_id(row['attraction_id'])
+        raise Exception, "Attraction ID #{row['attraction_id']} is incorrect." if attraction.blank?
+        ob=params[:type].constantize.new(:attraction_id=>attraction.id, :name=>row['name'], :pref_no=>row['pref_no'])
+        unless ob.save
+          raise Exception, ob.errors.full_messages.join(',')
+        end
+      end
+      flash[:notice]="Successfully Uploaded!"
+      redirect_to :back
+    rescue Exception=>e
+      flash[:error]="Could not upload! Reason: "+e.message
+      redirect_to :back
+      raise ActiveRecord::Rollback
+    end
+  end
+
+
+  def download_attractions
+    attr_data=Attraction.all(:include=>[:city,:attraction_themes,:attraction_categories])
+    csv_file=CSV.generate do |csv|
+      csv << ["AttractionID", "Name", "City", "Price", "Must do", "Start time", "End time", "Closed On","Other Details","Rating", "AttractionThemes", "AttractionCategories"]
+      attr_data.each do |item|
+        csv << [item.id, item.name, item.city.name, item.price, item.must_do, item.start_time, item.end_time, item.closed_on, item.other_details, item.rating,
+                item.attraction_themes.map{|x| "ID: "+x.id.to_s+"| Pref No: "+x.pref_no.to_s+"| Name: " +x.name}.join('     '),
+                item.attraction_categories.map{|x| "ID: "+x.id.to_s+"| Pref No: "+x.pref_no.to_s+"| Name: " +x.name}.join('     ')]
+      end
+    end
+    filename="AttractionsDumpAt"+ Time.now.to_s
+    send_data csv_file, :type => 'text/csv; charset=iso-8859-1; header=present', :disposition => "attachment;filename=#{filename}.csv"
   end
 
 end

@@ -1,0 +1,4 @@
+class AttractionCategory < AttractionGeneral
+
+
+end

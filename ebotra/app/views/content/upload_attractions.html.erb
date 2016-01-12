@@ -1,4 +1,6 @@
 <%= render 'header'%>
+<br><%= link_to "Download all Attractions!", {:controller => :content , :action=>:download_attractions} %>
+
 <h4>Upload Attractions</h4>
 <%= form_tag(url_for(:action => :upload_attractions_csv), :multipart => true) do |f| %>
     <%= label_tag "Upload File Here."%>
@@ -8,3 +10,12 @@
     Upload headers : ['name', 'city_name', 'price', 'start_time', 'end_time' , 'closed_on', 'other_details','rating', 'must_do']
 <% end %>
 <br><br>
+<h4>Upload Attraction Theme/Category</h4>
+<%= form_tag(url_for(:action => :upload_attraction_themes_csv), :multipart => true) do |f| %>
+    Type: <%= select_tag :type, options_for_select(["AttractionTheme", "AttractionCategory"]) %><br>
+    <%= label_tag "Upload File Here."%>
+    <%= file_field_tag :data_file %><br>
+    <%= submit_tag 'Submit' %><br><br>
+    Note:<br>
+    Upload headers : ['name', 'attraction_id', 'pref_no']
+<% end %>

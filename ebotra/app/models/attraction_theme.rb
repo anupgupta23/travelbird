@@ -1,0 +1,4 @@
+class AttractionTheme < AttractionGeneral
+
+
+end
