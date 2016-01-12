@@ -26,7 +26,7 @@ class ContentController < ApplicationController
     if object.blank?
       flash[:error]="ID not found for type #{params[:type]}"
     else
-      object.delete
+      object.destroy
       flash[:notice]="Deleted!"
     end
     redirect_to :back
